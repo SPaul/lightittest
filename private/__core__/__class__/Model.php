@@ -15,22 +15,22 @@ class Model implements iModel{
 	/**
 	 * PDO connection object
 	 */
-	private $dbc;
+	protected $dbc;
 
 	/**
 	 * specified to model table in database
 	 */
-	private $tablename;
+	protected $tablename;
 
 	/**
 	 * list of all fields in table
 	 */
-	private $fields;
+	protected $fields;
 
 	/**
 	 * list of validation rules for table fields
 	 */
-	private $validationRules;
+	protected $validationRules;
 
 	/**
 	 * constructor of the class. Provides connection to db
@@ -72,6 +72,42 @@ class Model implements iModel{
 	 */
 	public function validate(){
 
+	}
+
+	/**
+	 * create new entity and fill its fields
+	 *
+	 * @param array $data - fields data of new entity
+	 */
+	public function create(array $data){
+		foreach($data as $key => $value){
+			if(isset($this->fields[$key])){
+				$this->fields[$key] = $value;
+			}
+		}
+	}
+
+	/**
+	 * build query and execute it
+	 *
+	 * @return bool result of executing
+	 */
+	public function save(){
+		$q = "INSERT INTO {$this->tablename}(";
+		$v = 'VALUES(';
+
+		$total = count($this->fields);
+		$i = 0;
+		foreach($this->fields as $field => $value){
+			$i++;
+			$sign = $i < $total ? ', ' : ') ';
+			$q .= $field.$sign;
+
+			$v .= "'{$value}'".$sign;
+		}
+		$q .= $v.';';
+
+		return !$this->dbc->exec($q) ? true : false;
 	}
 }
 ?>

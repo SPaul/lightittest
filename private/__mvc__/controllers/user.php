@@ -15,11 +15,11 @@ defined('WATCH_DOG') or die();
 
 class user{
 	public function __construct(){
-		//echo 'I\'m included!';
+		
 	}
 
 	public function index(){
-		echo 'I am here.';
+		echo 'I am index, blah-blah-blah...';
 	}
 }
 ?>

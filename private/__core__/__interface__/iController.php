@@ -27,15 +27,23 @@ interface iController{
 	/**
 	 * @return array - list of all actions and its arguments
 	 */
-	public function actions();
+	public function getActions();
 
 	/**
-	 * run selected action
+	 * render assigned to action view
 	 * 
-	 * @param string $actionName - name of function to be executed
-	 * @param array $args - required parameters defined in actions function
-	 * @return string 
+	 * @param string $view - neme of view to render
+	 * @param array $data - some data fo rendering
+	 * @return string - rendered data
 	 */
-	public function run($actionName = 'index', array $args);
+	public function render($view, array $data);
+
+	/**
+	 * redirects to requested url
+	 * 
+	 * @param array | string $url - address for redirection. Can be local [controller/action] or absolute
+	 * @return instance of redirect class
+	 */
+	public function redirect($url, $absolute = false);
 }
 ?>

@@ -15,10 +15,9 @@ namespace System\Components;
 defined('WATCH_DOG') or die();
 
 use System\Components\Router;
-//use System\Components\Models\Model;
-//use System\Components\Controllers;
 use System\Components\Exceptions\ControllerNotFoundException;
 use System\Components\Exceptions\ActionNotFoundException;
+use System\Components\Redirect;
 
 class Application{
 	/**
@@ -29,11 +28,12 @@ class Application{
 	/**
 	 * controller class name, requested by user
 	 */
-	public $controller;
+	private $controller;
 
 	/**
 	 * current action name
 	 */
+	private $action;
 
 	/**
 	 * controller data
@@ -62,7 +62,7 @@ class Application{
 	/**
 	 * current application configuration
 	 *
-	 * @return System\Components\Configuration object
+	 * @return array 
 	 */
 	public function getConfig(){
 		return $this->configuration;
@@ -87,7 +87,19 @@ class Application{
 			throw new ActionNotFoundException('No such action in current controller.');
 		}
 
+		if(!in_array($this->action, $controller->getActions())){
+			throw new ActionNotFoundException('No such action in current controller.');
+		}
+
 		$this->data = $controller->$action();
+
+		if($this->data instanceof Redirect){
+			//make redirect
+		}
+	}
+
+	public function render(){
+
 	}
 }
 ?>

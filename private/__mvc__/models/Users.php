@@ -11,16 +11,16 @@ namespace System\Components\Models;
 // deny indirect access
 defined('WATCH_DOG') or die();
 
-class UsersModel extends Model(){
+class Users extends Model{
 	// name of current table
-	private $tablename = 'users';
+	protected $tablename = 'users';
 
 	// list of all fields in table
-	private $fields = [
-		'id', 
-		'name',
-		'public_id',
-		'email',
+	protected $fields = [
+		'id' => '', 
+		'name' => '',
+		'public_id' => '',
+		'email' => '',
 	];
 
 }
