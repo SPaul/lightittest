@@ -38,6 +38,11 @@ class Model implements iModel{
 	public $lastInsertId;
 
 	/**
+	 * order mode of result set
+	 */
+	public $orderMode = 'DESC';
+
+	/**
 	 * constructor of the class. Provides connection to db
 	 * and configuring all interactions with it
 	 *
@@ -118,6 +123,24 @@ class Model implements iModel{
 		}
 
 		return false;
+	}
+
+	/**
+	 * select all rows from table
+	 * 
+	 * @return array of rows from current table
+	 */
+	public function findAll(){
+		$q = "SELECT * FROM {$this->tablename} ORDER BY id {$this->orderMode}";
+		return $this->dbc->query($q)->fetchAll();
+	}
+
+	/**
+	 *
+	 */
+	public function findByCondition($condition = []){
+		$q = "SELECT * FROM {$this->tablename} WHERE {$condition[0]}";
+		return $this->dbc->query($q)->fetchAll();
 	}
 }
 ?>

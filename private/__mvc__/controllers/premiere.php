@@ -9,9 +9,11 @@
 namespace System\Components\Controllers;
 
 include MODELS_DIR.'Posts.php';
+include MODELS_DIR.'Comments.php';
 
 use System\Components\Controllers\Controller;
 use System\Components\Models\Posts;
+use System\Components\Models\Comments;
 
 // deny indirect access
 defined('WATCH_DOG') or die();
@@ -20,7 +22,7 @@ class premiere extends Controller{
 	private $auth = false;
 
 	public function __construct(){
-		$this->actions = ['index', 'vklogin', 'logout', 'wall', 'createpost'];
+		$this->actions = ['index', 'vklogin', 'logout', 'wall', 'createpost', 'createpostcomment'];
 
 		$this->auth = isset($_SESSION['user']) ? true : false;
 	}
@@ -61,7 +63,14 @@ class premiere extends Controller{
 	 * show all posts with comments
 	 */
 	public function wall(){
-		return $this->render('wall');
+		$posts = new Posts();
+		$data['posts'] = $posts->findAll();
+
+		$comments = new Comments();
+		$comments->orderMode = 'ASC';
+		$data['comments'] = $comments->findAll();
+
+		return $this->render('wall', $data);
 	}
 
 	/**
@@ -70,6 +79,22 @@ class premiere extends Controller{
 	public function createpost(){
 		$model = new Posts();
 		$model->create(['content' => $_POST['content']]);
+		if($model->save()){
+			return $model->lastInsertId;
+		}
+	}
+
+	/**
+	 * create new comment to the post
+	 */
+	public function createpostcomment(){
+		$model = new Comments();
+		$model->create(
+			[
+				'content' => $_POST['content'], 
+				'parent_id' => $_POST['id']
+			]
+		);
 		if($model->save()){
 			return $model->lastInsertId;
 		}

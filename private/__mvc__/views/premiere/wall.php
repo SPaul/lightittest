@@ -39,9 +39,51 @@ defined('WATCH_DOG') or die();
 		    <a href="index.php?r=premiere/index" class="btn btn-default"><span class="glyphicon glyphicon-user"></span> Log in</a>
 		  </div>
 		</div>
-	<?php endif; ?>
 
+		<div class="alert alert-danger" style="margin-top: 20px">You need logi to send posts or comment!</div>
+	<?php endif; ?>
+	<div class="posts-container" style="margin-top: 20px">
+	<?php foreach($data['posts'] as $post):?>
+		<div class="well">
+			<p><?= $post['content']?></p>
+			<?php if(isset($_SESSION['user'])):?>
+				<div class="col-sm-1 pull-right" style="width: 20px">
+					<span class="glyphicon glyphicon-comment btn-comment" data-postid="<?= $post['id']?>" style="cursor: pointer; color: #ccc;" title="Write comment" data-toggle="modal" data-target="#postCommentModal"></span>
+				</div>
+			<?php endif; ?>
+		</div>
+
+		<?php foreach($data['comments'] as $comment):?>
+			<?php if($comment['parent_id'] == $post['id']):?>
+				<blockquote>
+				  <p><?= $comment['content']?></p>
+				  <p class="text-right" style="color: #ccc; font-size: 14px"><?= $comment['created']?></p>
+				</blockquote>
+			<?php endif;?>
+		<?php endforeach;?>
+	<?php endforeach;?>
+	</div>
 </div>
+
+
+<div class="modal fade" id="postCommentModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Write a comment</h4>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" name="postComment" id="postComment" placeholder="type your comment here"></textarea>
+        <input type="hidden" name="postId" id="postId">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="postCommentSave">Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <script type="text/javascript">
 	$('#postBtn').on('click', function(){
@@ -50,8 +92,27 @@ defined('WATCH_DOG') or die();
 		   url: "index.php?r=premiere/createpost&aj",
 		   data: {"content" : $('#postData').val()},
 		   success: function(msg){
-		     alert( "Data Saved: " + msg );
+		     location.reload();
 		   }
 		});
+	});
+
+	$('#postCommentSave').on('click', function(e){
+		$.ajax({
+		   type: "POST",
+		   url: "index.php?r=premiere/createpostcomment&aj",
+		   data: {
+		   		"content" : $('#postComment').val(),
+		   		"id" : $('#postId').val()
+		   },
+		   success: function(msg){
+		     location.reload();
+		     //console.log(msg);
+		   }
+		});
+	});
+
+	$('.btn-comment').on('click', function(e){
+		$('#postId').val(e.currentTarget.getAttribute('data-postid'));
 	});
 </script>
