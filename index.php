@@ -14,10 +14,14 @@
  */
 define('WATCH_DOG', true);
 
+session_start();
+
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+define('HOME_URL', $_SERVER['HTTP_HOST']);
 define('MODELS_DIR', ROOT.'/private/__mvc__/models/');
 define('CONTROLLERS_DIR', ROOT.'/private/__mvc__/controllers/');
 define('VIEWS_DIR', ROOT.'/private/__mvc__/views/');
+define('LAYOUTS_DIR', ROOT.'/private/__layout__/');
 
 /**
  * let's get all we need to run our super mega app

@@ -33,6 +33,11 @@ class Model implements iModel{
 	protected $validationRules;
 
 	/**
+	 * id of last added record to table
+	 */
+	public $lastInsertId;
+
+	/**
 	 * constructor of the class. Provides connection to db
 	 * and configuring all interactions with it
 	 *
@@ -107,7 +112,12 @@ class Model implements iModel{
 		}
 		$q .= $v.';';
 
-		return !$this->dbc->exec($q) ? true : false;
+		if(!$this->dbc->exec($q)){
+			$this->lastInsertId = $this->dbc->lastInsertId();
+			return true;
+		}
+
+		return false;
 	}
 }
 ?>

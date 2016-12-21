@@ -63,5 +63,14 @@ class Router{
 	public function getNode($key){
 		return isset($this->configuration[$key]) ? $this->configuration[$key] : false;
 	}
+
+	/**
+	 * check is request ajax or not
+	 *
+	 * @return bool - ajax status
+	 */
+	public function isAjax(){
+		return $this->configuration['is_ajax'];
+	}
 }
 ?>

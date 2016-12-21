@@ -36,6 +36,11 @@ class Application{
 	private $action;
 
 	/**
+	 * true if request is using ajax
+	 */
+	private $is_ajax = false;
+
+	/**
 	 * controller data
 	 */
 	private $data;
@@ -57,6 +62,7 @@ class Application{
 		$router = new Router($this);
 		$this->controller = $router->getController();
 		$this->action = $router->getAction();
+		$this->is_ajax = $router->isAjax();
 	}
 
 	/**
@@ -70,6 +76,9 @@ class Application{
 
 	/**
 	 * run configured application. Execute requested controller method
+	 *
+	 * @throws ControllerNotFoundException
+	 * @throws ActionNotFoundException
 	 */
 	public function run(){
 		$controllerPath = CONTROLLERS_DIR.$this->controller.'.php';
@@ -91,15 +100,36 @@ class Application{
 			throw new ActionNotFoundException('No such action in current controller.');
 		}
 
+		$controller->setViewsDir($this->controller);
 		$this->data = $controller->$action();
 
 		if($this->data instanceof Redirect){
-			//make redirect
+			$url = $this->data->getRedirectLocation();
+			header($url);
+			exit;
 		}
+
+		if($this->is_ajax){
+			echo $this->data;
+			exit;
+		}
+
+		$this->render();
 	}
 
+	/**
+	 * render all content with template
+	 *
+	 * @throws LayoutNotFoundException
+	 */
 	public function render(){
+		$layoutPath = LAYOUTS_DIR.$this->configuration['layout'].'.php';
+		if(!file_exists($layoutPath)){
+			throw new LayoutNotFoundException('No such layout.');
+		}
 
+		$content = $this->data;
+		require_once $layoutPath;
 	}
 }
 ?>

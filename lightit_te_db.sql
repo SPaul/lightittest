@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 19 2016 г., 00:18
+-- Время создания: Дек 21 2016 г., 03:20
 -- Версия сервера: 5.7.13
 -- Версия PHP: 7.0.8
 
@@ -23,24 +23,23 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `users`
+-- Структура таблицы `posts`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(3) unsigned NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `public_id` bigint(15) unsigned NOT NULL,
-  `email` varchar(50) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `posts` (
+  `id` int(7) unsigned NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Индексы сохранённых таблиц
 --
 
 --
--- Индексы таблицы `users`
+-- Индексы таблицы `posts`
 --
-ALTER TABLE `users`
+ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -48,10 +47,10 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT для таблицы `users`
+-- AUTO_INCREMENT для таблицы `posts`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(3) unsigned NOT NULL AUTO_INCREMENT;
+ALTER TABLE `posts`
+  MODIFY `id` int(7) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -36,7 +36,7 @@ interface iController{
 	 * @param array $data - some data fo rendering
 	 * @return string - rendered data
 	 */
-	public function render($view, array $data);
+	public function render($view, $data = []);
 
 	/**
 	 * redirects to requested url
