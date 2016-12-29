@@ -14,6 +14,7 @@ include MODELS_DIR.'Comments.php';
 use System\Components\Controllers\Controller;
 use System\Components\Models\Posts;
 use System\Components\Models\Comments;
+use System\Helpers\Tree;
 
 // deny indirect access
 defined('WATCH_DOG') or die();
@@ -22,7 +23,7 @@ class premiere extends Controller{
 	private $auth = false;
 
 	public function __construct(){
-		$this->actions = ['index', 'vklogin', 'logout', 'wall', 'createpost', 'createpostcomment'];
+		$this->actions = ['index', 'vklogin', 'logout', 'wall', 'createpost', 'createcomment'];
 
 		$this->auth = isset($_SESSION['user']) ? true : false;
 	}
@@ -68,7 +69,14 @@ class premiere extends Controller{
 
 		$comments = new Comments();
 		$comments->orderMode = 'ASC';
-		$data['comments'] = $comments->findAll();
+		$data['comments'] = $comments->findAll();		
+
+		$t = new Tree();
+		foreach($data['comments'] as $comment => $fields){
+			if($fields['parent_type'] == 'post'){
+				$t->buildTree($fields['id'], $data['comments'], $t);
+			}
+		}
 
 		return $this->render('wall', $data);
 	}
@@ -87,12 +95,13 @@ class premiere extends Controller{
 	/**
 	 * create new comment to the post
 	 */
-	public function createpostcomment(){
+	public function createcomment(){
 		$model = new Comments();
 		$model->create(
 			[
 				'content' => $_POST['content'], 
-				'parent_id' => $_POST['id']
+				'parent_id' => $_POST['id'],
+				'parent_type' => $_POST['parent'],
 			]
 		);
 		if($model->save()){

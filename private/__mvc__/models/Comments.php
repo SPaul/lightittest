@@ -19,6 +19,7 @@ class Comments extends Model{
 	protected $fields = [
 		'content' => '',
 		'parent_id' => '',
+		'parent_type' => '',
 	];
 
 }

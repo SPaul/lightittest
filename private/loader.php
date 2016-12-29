@@ -23,6 +23,7 @@ require_once 'private/__core__/__class__/ControllerNotFoundException.php';
 // require_once 'private/__core__/__class__/LayoutNotFoundException.php';
 require_once 'private/__core__/__class__/Configuration.php';
 require_once 'private/__core__/__class__/Redirect.php';
+require_once 'private/__core__/__class__/Tree.php';
 require_once 'private/__core__/__class__/Controller.php';
 require_once 'private/__core__/__class__/Model.php';
 require_once 'private/__core__/__class__/Router.php';

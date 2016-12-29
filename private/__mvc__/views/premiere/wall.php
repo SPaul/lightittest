@@ -40,7 +40,7 @@ defined('WATCH_DOG') or die();
 		  </div>
 		</div>
 
-		<div class="alert alert-danger" style="margin-top: 20px">You need logi to send posts or comment!</div>
+		<div class="alert alert-danger" style="margin-top: 20px">You need login to send post or comment!</div>
 	<?php endif; ?>
 	<div class="posts-container" style="margin-top: 20px">
 	<?php foreach($data['posts'] as $post):?>
@@ -48,16 +48,21 @@ defined('WATCH_DOG') or die();
 			<p><?= $post['content']?></p>
 			<?php if(isset($_SESSION['user'])):?>
 				<div class="col-sm-1 pull-right" style="width: 20px">
-					<span class="glyphicon glyphicon-comment btn-comment" data-postid="<?= $post['id']?>" style="cursor: pointer; color: #ccc;" title="Write comment" data-toggle="modal" data-target="#postCommentModal"></span>
+					<span class="glyphicon glyphicon-comment btn-comment" data-postid="<?= $post['id']?>" data-parent="post" style="cursor: pointer; color: #ccc;" title="Write comment" data-toggle="modal" data-target="#postCommentModal"></span>
 				</div>
 			<?php endif; ?>
 		</div>
 
 		<?php foreach($data['comments'] as $comment):?>
-			<?php if($comment['parent_id'] == $post['id']):?>
+			<?php if(($comment['parent_id'] == $post['id']) && ($comment['parent_type'] == 'post')):?>
 				<blockquote>
-				  <p><?= $comment['content']?></p>
-				  <p class="text-right" style="color: #ccc; font-size: 14px"><?= $comment['created']?></p>
+				  	<p><?= $comment['content']?></p>
+				  	<p class="text-right" style="color: #ccc; font-size: 14px"><?= $comment['created']?></p>
+					<?php if(isset($_SESSION['user'])):?>
+						<div class="col-sm-1 pull-right" style="width: 20px">
+							<span class="glyphicon glyphicon-comment btn-comment" data-postid="<?= $comment['id']?>" data-parent="comment" style="cursor: pointer; color: #ccc; font-size: 14px" title="Write comment" data-toggle="modal" data-target="#postCommentModal"></span>
+						</div>
+					<?php endif; ?>
 				</blockquote>
 			<?php endif;?>
 		<?php endforeach;?>
@@ -76,6 +81,7 @@ defined('WATCH_DOG') or die();
       <div class="modal-body">
         <textarea class="form-control" name="postComment" id="postComment" placeholder="type your comment here"></textarea>
         <input type="hidden" name="postId" id="postId">
+        <input type="hidden" name="parentType" id="parentType">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -100,10 +106,11 @@ defined('WATCH_DOG') or die();
 	$('#postCommentSave').on('click', function(e){
 		$.ajax({
 		   type: "POST",
-		   url: "index.php?r=premiere/createpostcomment&aj",
+		   url: "index.php?r=premiere/createcomment&aj",
 		   data: {
 		   		"content" : $('#postComment').val(),
-		   		"id" : $('#postId').val()
+		   		"id" : $('#postId').val(),
+		   		"parent" : $('#parentType').val(),
 		   },
 		   success: function(msg){
 		     location.reload();
@@ -114,5 +121,6 @@ defined('WATCH_DOG') or die();
 
 	$('.btn-comment').on('click', function(e){
 		$('#postId').val(e.currentTarget.getAttribute('data-postid'));
+		$('#parentType').val(e.currentTarget.getAttribute('data-parent'));
 	});
 </script>
