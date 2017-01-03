@@ -10,7 +10,7 @@
 	<title>Light IT test exercise</title>
 </head>
 <body>
-	<div class="container">
+	<div class="container" style="margin-top: 20px">
   	<?= $content;?>
 	</div>
 </body>

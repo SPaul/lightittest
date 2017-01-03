@@ -53,17 +53,11 @@ defined('WATCH_DOG') or die();
 			<?php endif; ?>
 		</div>
 
-		<?php foreach($data['comments'] as $comment):?>
-			<?php if(($comment['parent_id'] == $post['id']) && ($comment['parent_type'] == 'post')):?>
-				<blockquote>
-				  	<p><?= $comment['content']?></p>
-				  	<p class="text-right" style="color: #ccc; font-size: 14px"><?= $comment['created']?></p>
-					<?php if(isset($_SESSION['user'])):?>
-						<div class="col-sm-1 pull-right" style="width: 20px">
-							<span class="glyphicon glyphicon-comment btn-comment" data-postid="<?= $comment['id']?>" data-parent="comment" style="cursor: pointer; color: #ccc; font-size: 14px" title="Write comment" data-toggle="modal" data-target="#postCommentModal"></span>
-						</div>
-					<?php endif; ?>
-				</blockquote>
+		<?php foreach($data['comments'] as $parent_id => $comments_list):?>
+			<?php if($parent_id == $post['id']):?>
+				<?php foreach($comments_list as $comment_id => $comment_data):?>
+					<?php echo $comment_data; ?>
+				<?php endforeach;?>
 			<?php endif;?>
 		<?php endforeach;?>
 	<?php endforeach;?>
@@ -124,3 +118,10 @@ defined('WATCH_DOG') or die();
 		$('#parentType').val(e.currentTarget.getAttribute('data-parent'));
 	});
 </script>
+
+<style type="text/css">
+blockquote{
+	
+	padding-right: 0px;
+}
+</style>

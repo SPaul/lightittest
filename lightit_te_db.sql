@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 22 2016 г., 00:29
+-- Время создания: Янв 03 2017 г., 23:08
 -- Версия сервера: 5.7.13
 -- Версия PHP: 7.0.8
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `content` varchar(255) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `parent_type` enum('post','comment') NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `comments`
@@ -41,7 +41,17 @@ CREATE TABLE IF NOT EXISTS `comments` (
 INSERT INTO `comments` (`id`, `parent_id`, `content`, `created`, `parent_type`) VALUES
 (1, 7, 'Просто комментарий', '2016-12-21 21:01:38', 'post'),
 (2, 7, 'Еще один комментарий к какой-то записи', '2016-12-21 21:15:26', 'post'),
-(3, 5, 'Супер-пупер комментарий ;)', '2016-12-21 21:21:10', 'post');
+(3, 5, 'Супер-пупер комментарий ;)', '2016-12-21 21:21:10', 'post'),
+(4, 1, 'my comment)', '2016-12-28 19:29:37', 'comment'),
+(5, 3, 'one more my comment', '2016-12-28 19:46:44', 'comment'),
+(6, 5, 'xxx', '2016-12-29 21:45:39', 'comment'),
+(7, 6, 'yyy', '2016-12-29 21:53:56', 'comment'),
+(8, 7, '2nd comment', '2017-01-03 19:58:58', 'comment'),
+(9, 7, '3rd comment', '2017-01-03 20:00:01', 'comment'),
+(10, 4, 'comment to "пробная запись"', '2017-01-03 20:01:07', 'post'),
+(11, 10, 'comment to comment', '2017-01-03 20:01:29', 'comment'),
+(12, 11, 'comment to comment to comment', '2017-01-03 20:06:45', 'comment'),
+(13, 9, '4th comment', '2017-01-03 20:07:12', 'comment');
 
 -- --------------------------------------------------------
 
@@ -90,7 +100,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT для таблицы `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(7) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(7) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT для таблицы `posts`
 --

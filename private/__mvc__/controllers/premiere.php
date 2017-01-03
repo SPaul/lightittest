@@ -72,11 +72,23 @@ class premiere extends Controller{
 		$data['comments'] = $comments->findAll();		
 
 		$t = new Tree();
+		$hierarchy = [];
 		foreach($data['comments'] as $comment => $fields){
 			if($fields['parent_type'] == 'post'){
+
+				$t->branch = '<blockquote>'.'<p>'.$fields['content'].'</p><p class="text-right" style="color: #ccc; font-size: 14px">'.$fields['created'].'</p>';
+
+				if(isset($_SESSION['user']))
+					$t->branch .= '<div class="col-sm-1 pull-right" style="width: 20px"><span class="glyphicon glyphicon-comment btn-comment" data-postid="'.$fields['id'].'" data-parent="comment" style="cursor: pointer; color: #ccc; font-size: 14px" title="Write comment" data-toggle="modal" data-target="#postCommentModal"></span></div>';
+
 				$t->buildTree($fields['id'], $data['comments'], $t);
+				$t->branch .= '</blockquote>';
+				$hierarchy[$fields['parent_id']][] = $t->branch;
+				$t->branch = '';
 			}
 		}
+
+		$data['comments'] = $hierarchy;
 
 		return $this->render('wall', $data);
 	}
@@ -85,6 +97,7 @@ class premiere extends Controller{
 	 * create new post
 	 */
 	public function createpost(){
+		if(!$this->auth) return;
 		$model = new Posts();
 		$model->create(['content' => $_POST['content']]);
 		if($model->save()){
@@ -96,6 +109,7 @@ class premiere extends Controller{
 	 * create new comment to the post
 	 */
 	public function createcomment(){
+		if(!$this->auth) return;
 		$model = new Comments();
 		$model->create(
 			[
